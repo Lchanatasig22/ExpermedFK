@@ -21,16 +21,14 @@
     }
 
     <div class="wrapper">
+        <button class="toggle-btn" type="button" id="sidebarToggle">
+            <i class="fa fa-heartbeat"></i>
+        </button>
         <aside id="sidebar">
-            <div class="d-flex">
-                <button class="toggle-btn" type="button" id="sidebarToggle">
-                    <img src="~/images/image-removebg-preview.png" style="width:20px; height:30px" alt="Icono de cuadrícula">
-                </button>
-                <div class="sidebar-logo">
-                    <a asp-area="" asp-controller="Home" asp-action="Index">EXPERMED</a>
-                    <p hidden>@perfilId</p>
-                    <p hidden> especialidad @especialidadId</p>
-                </div>
+            <div class="sidebar-logo">
+                <a asp-area="" asp-controller="Home" asp-action="Index">EXPERMED</a>
+                <p hidden>@perfilId</p>
+                <p hidden> especialidad @especialidadId</p>
             </div>
 
             <ul class="sidebar-nav">
@@ -115,9 +113,6 @@
             </div>
         </aside>
         <div class="main p-3">
-            <button class="btn btn-primary d-md-none" id="mobileSidebarToggle">
-                <i class="fa fa-bars"></i>
-            </button>
             <div class="container-fluid">
                 @RenderBody()
             </div>
@@ -137,7 +132,6 @@
                     <div class="form-group">
                         <label for="pdfOptions">Seleccione el tipo de documento a generar:</label>
                         <select class="form-control" id="pdfOptions">
-
                             <option value="">Seleccione</option>
                             <option value="receta">Imprimir Receta</option>
                             <option value="justificacion">Certificado Médico</option>
@@ -161,15 +155,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.3/jquery.validate.min.js"></script>
-
     <script src="~/script.js"></script>
-    <script>
-        // Toggle sidebar on mobile
-        document.getElementById('mobileSidebarToggle').addEventListener('click', function() {
-            document.getElementById('sidebar').classList.toggle('active');
-        });
-    </script>
     <!-- Include the Scripts section -->
     @RenderSection("Scripts", required: false)
+
+    <script>
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            var sidebar = document.getElementById('sidebar');
+            var main = document.querySelector('.main');
+            sidebar.classList.toggle('collapsed');
+            main.classList.toggle('collapsed');
+        });
+    </script>
 </body>
 </html>

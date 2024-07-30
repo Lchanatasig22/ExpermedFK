@@ -18,7 +18,7 @@
         <div class="row">
             <div class="col-md-3">
                 <label for="opcion">Buscar por</label>
-                <select class="form-control" id="opcion" onchange="onSearchChanged()">
+                <select class="form-control" id="opcion">
                     <option value="-2">Listar todo</option>
                     <option value="1">Nombre(s)</option>
                     <option value="2">Número de documento</option>
@@ -68,9 +68,7 @@
                         <td>@consulta.MotivoConsulta</td>
                         <td>@consulta.EnfermedadConsulta</td>
                         <td>@consulta.HistorialConsulta</td>
-                        <td>
-                         @consulta.EstadoConsultaC
-                        </td>
+                        <td>@consulta.EstadoConsultaC</td>
                     </tr>
                 }
             </tbody>
@@ -89,65 +87,72 @@ else
     <i class="fa fa-plus"></i> Añadir nueva consulta
 </a>
 
-<script>
-    function onSearchChanged() {
-        const selectElement = document.getElementById('opcion');
-        const searchFields = document.getElementById('buscarFields');
-        const tableRows = document.querySelectorAll('tbody tr');
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            window.onSearchChanged = function () {
+                const selectElement = document.getElementById('opcion');
+                const searchFields = document.getElementById('buscarFields');
+                const tableRows = document.querySelectorAll('tbody tr');
 
-        if (selectElement.value === '-2') {
-            searchFields.classList.add('d-none');
-            tableRows.forEach(row => row.style.display = '');
-            document.getElementById('noResults').classList.add('d-none');
-        } else {
-            searchFields.classList.remove('d-none');
-        }
-    }
-
-    function onSearch() {
-        const criterio = document.getElementById('buscarCriterio').value.toLowerCase();
-        const optionValue = document.getElementById('opcion').value;
-        const tableRows = document.querySelectorAll('tbody tr');
-        let found = false;
-
-        tableRows.forEach(row => {
-            if (row.id) {
-                let cellValue = '';
-                switch (optionValue) {
-                    case '1': cellValue = row.cells[2].innerText.toLowerCase(); break;
-                    case '2': cellValue = row.cells[3].innerText.toLowerCase(); break;
-                    case '3': cellValue = row.cells[4].innerText.toLowerCase(); break;
-                    case '4': cellValue = row.cells[5].innerText.toLowerCase(); break;
-                }
-
-                if (cellValue.includes(criterio)) {
-                    row.style.display = '';
-                    found = true;
+                if (selectElement.value === '-2') {
+                    searchFields.classList.add('d-none');
+                    tableRows.forEach(row => row.style.display = '');
+                    document.getElementById('noResults').classList.add('d-none');
                 } else {
-                    row.style.display = 'none';
+                    searchFields.classList.remove('d-none');
                 }
+            };
+
+            window.onSearch = function () {
+                const criterio = document.getElementById('buscarCriterio').value.toLowerCase();
+                const optionValue = document.getElementById('opcion').value;
+                const rows = document.querySelectorAll('tbody tr');
+                let found = false;
+
+                rows.forEach(row => {
+                    if (row.id) {
+                        let cellValue = '';
+                        switch (optionValue) {
+                            case '1': cellValue = row.cells[2].innerText.toLowerCase(); break;
+                            case '2': cellValue = row.cells[3].innerText.toLowerCase(); break;
+                            case '3': cellValue = row.cells[4].innerText.toLowerCase(); break;
+                            case '4': cellValue = row.cells[5].innerText.toLowerCase(); break;
+                        }
+
+                        if (cellValue.includes(criterio)) {
+                            row.style.display = '';
+                            found = true;
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    }
+                });
+
+                document.getElementById('noResults').classList.toggle('d-none', found);
+            };
+
+            const opcionSelect = document.getElementById('opcion');
+            opcionSelect.addEventListener('change', onSearchChanged);
+
+            var successMessage = '@TempData["SuccessMessage"]';
+            var errorMessage = '@TempData["ErrorMessage"]';
+
+            if (successMessage) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Éxito',
+                    text: successMessage
+                });
+            }
+
+            if (errorMessage) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: errorMessage
+                });
             }
         });
-
-        document.getElementById('noResults').classList.toggle('d-none', found);
-    }
-
-    var successMessage = '@TempData["SuccessMessage"]';
-    var errorMessage = '@TempData["ErrorMessage"]';
-
-    if (successMessage) {
-        Swal.fire({
-            icon: 'success',
-            title: 'Éxito',
-            text: successMessage
-        });
-    }
-
-    if (errorMessage) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: errorMessage
-        });
-    }
-</script>
+    </script>
+}

@@ -87,9 +87,7 @@
             const buscarCriterio = document.getElementById('buscarCriterio');
             const noResults = document.getElementById('noResults');
 
-            opcionSelect.addEventListener('change', onSearchChanged);
-
-            function onSearchChanged() {
+            window.onSearchChanged = function () {
                 if (opcionSelect.value === '-2') {
                     buscarFields.classList.add('d-none');
                     showAllRows();
@@ -97,9 +95,9 @@
                 } else {
                     buscarFields.classList.remove('d-none');
                 }
-            }
+            };
 
-            function onSearch() {
+            window.onSearch = function () {
                 const criterio = buscarCriterio.value.toLowerCase();
                 const optionValue = opcionSelect.value;
                 const rows = document.querySelectorAll('tbody tr');
@@ -116,7 +114,7 @@
                 });
 
                 noResults.classList.toggle('d-none', found);
-            }
+            };
 
             function getCellValue(row, optionValue) {
                 switch (optionValue) {
